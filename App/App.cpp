@@ -159,10 +159,10 @@ int SGX_CDECL main(int argc, char *argv[])
 {
     sgx_device_status_t status;
     int ret = sgx_cap_enable_device(&status);
-    printf("ret :%d, status:%d\n", ret,status);
-    
-    (void) argc;
-    (void) argv;
+    if(ret != 0 || status != 0){
+        printf("ret :%d, status:%d\n", ret,status);
+        return 0;
+    }
 
     /* Configuration for Switchless SGX */
     sgx_uswitchless_config_t us_config = SGX_USWITCHLESS_CONFIG_INITIALIZER;
