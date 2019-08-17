@@ -178,14 +178,6 @@ int initialize_enclave(const sgx_uswitchless_config_t* us_config)
 }
 
 /* OCall functions */
-void ocall_print(const char *str)
-{
-    /* Proxy/Bridge will check the length and null-terminate
-     * the input string to prevent buffer overflow.
-     */
-    printf("%s", str);
-}
-
 void ocall_handle_pub_key(const char *str){
     printf("%s\n", str);
 }
@@ -193,50 +185,6 @@ void ocall_handle_pub_key(const char *str){
 void ocall_handle_signed_data(const char *str){
     printf("%s\n", str);
 }
-
-void ocall_empty(void) {}
-void ocall_empty_switchless(void) {}
-
-void benchmark_empty_ocall(int is_switchless) 
-{
-    unsigned long nrepeats = REPEATS;
-    printf("Repeating an **%s** OCall that does nothing for %lu times...\n",
-            is_switchless ? "switchless" : "ordinary", nrepeats);
-
-    struct timeval tval_before, tval_after, tval_result;
-    gettimeofday(&tval_before, NULL);
-
-    sgx_status_t status = ecall_repeat_ocalls(global_eid, nrepeats, is_switchless);
-    if (status != SGX_SUCCESS) {
-        printf("ERROR: ECall failed\n");
-        print_error_message(status);
-        exit(-1);
-    }
-
-    gettimeofday(&tval_after, NULL);
-    timersub(&tval_after, &tval_before, &tval_result);
-    printf("Time elapsed: %ld.%06ld seconds\n", (long int)tval_result.tv_sec, (long int)tval_result.tv_usec);
-}
-
-void benchmark_empty_ecall(int is_switchless) 
-{
-    unsigned long nrepeats = REPEATS;
-    printf("Repeating an **%s** ECall that does nothing for %lu times...\n",
-            is_switchless ? "switchless" : "ordinary", nrepeats);
-
-    struct timeval tval_before, tval_after, tval_result;
-    gettimeofday(&tval_before, NULL);
-
-    sgx_status_t(*ecall_fn)(sgx_enclave_id_t) = is_switchless ? ecall_empty_switchless : ecall_empty;
-    while (nrepeats--) {
-        ecall_fn(global_eid);
-    }
-
-    gettimeofday(&tval_after, NULL);
-    timersub(&tval_after, &tval_before, &tval_result);
-    printf("Time elapsed: %ld.%06ld seconds\n", (long int)tval_result.tv_sec, (long int)tval_result.tv_usec);
-}
-
 
 /* Application entry */
 int SGX_CDECL main(int argc, char *argv[])
@@ -259,31 +207,11 @@ int SGX_CDECL main(int argc, char *argv[])
         printf("Error: enclave initialization failed\n");
         return -1;
     }
-
-    int s_data;
-
-    //sgx_status_t sign_status = sign_data(global_eid, &s_data);
-
-    //printf("sign_status:%d, s_data:%d\n", sign_status, s_data);
     char buffer[100] = "hello, enlave!";
     size_t len = strlen(buffer);
 
     sgx_status_t sign_status = sign_tx_blob(global_eid, buffer, len);
-    printf("sign_status:%d, s_data:%d\n", sign_status, s_data);
+    printf("sign_status:%d\n", sign_status);
 
-    return 0;
-
-    printf("Running a benchmark that compares **ordinary** and **switchless** OCalls...\n");
-    benchmark_empty_ocall(1);
-    benchmark_empty_ocall(0);
-    printf("Done.\n");
-    
-
-    printf("Running a benchmark that compares **ordinary** and **switchless** ECalls...\n");
-    benchmark_empty_ecall(1);
-    benchmark_empty_ecall(0);
-    printf("Done.\n");
-
-    sgx_destroy_enclave(global_eid);
     return 0;
 }
