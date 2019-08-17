@@ -123,7 +123,7 @@ else
 endif
 Crypto_Library_Name := sgx_tcrypto
 
-Enclave_Cpp_Files := Enclave/Enclave.cpp Enclave/sign_data.cpp Enclave/buchain/private_key.cpp Enclave/buchain/crypto.cpp Enclave/buchain/ed25519.cpp Enclave/buchain/random.cpp
+Enclave_Cpp_Files := Enclave/Enclave.cpp Enclave/buchain/private_key.cpp Enclave/buchain/crypto.cpp Enclave/buchain/ed25519.cpp Enclave/buchain/random.cpp
 Enclave_Include_Paths := -IEnclave -IEnclave/buchain/ -IEnclave/buchain/include/ -I$(SGX_SDK)/include -I$(SGX_SDK)/include/tlibc -I$(SGX_SDK)/include/libcxx
 
 Enclave_C_Flags := -nostdinc -fvisibility=hidden -fpie -fstack-protector $(Enclave_Include_Paths)
