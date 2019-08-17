@@ -46,6 +46,9 @@ enclave {
     };
 
     untrusted {
+        void ocall_handle_pub_key([in, string]const char* str);
+        void ocall_handle_signed_data([in, string]const char* str);
+
         void ocall_print([in, string]const char* str);
         void ocall_empty(void);
         void ocall_empty_switchless(void) transition_using_threads;

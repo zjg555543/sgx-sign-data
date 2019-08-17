@@ -1,11 +1,13 @@
 
 #include <string.h>
-#include "Enclave_t.h"
 
+#include "sign_data.h"
 
 void sign_tx_blob(char* buf, size_t len) {
     //std::string input_str(buf, len);
-    ocall_print(buf);
+    
+
+    SignData(buf, len);
 
 	//std::string priv = "privbtKg4aP3j2DTnh5ux4uqhEymouK67qjV9nbrTLNT4yAUNmP1ZcqF";
 	//std::string data(buf, len);

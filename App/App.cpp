@@ -186,6 +186,14 @@ void ocall_print(const char *str)
     printf("%s", str);
 }
 
+void ocall_handle_pub_key(const char *str){
+    printf("%s\n", str);
+}
+
+void ocall_handle_signed_data(const char *str){
+    printf("%s\n", str);
+}
+
 void ocall_empty(void) {}
 void ocall_empty_switchless(void) {}
 
