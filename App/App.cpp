@@ -229,6 +229,7 @@ void benchmark_empty_ecall(int is_switchless)
     printf("Time elapsed: %ld.%06ld seconds\n", (long int)tval_result.tv_sec, (long int)tval_result.tv_usec);
 }
 
+
 /* Application entry */
 int SGX_CDECL main(int argc, char *argv[])
 {
@@ -253,8 +254,13 @@ int SGX_CDECL main(int argc, char *argv[])
 
     int s_data;
 
-    sgx_status_t sign_status = sign_data(global_eid, &s_data);
+    //sgx_status_t sign_status = sign_data(global_eid, &s_data);
 
+    //printf("sign_status:%d, s_data:%d\n", sign_status, s_data);
+    char buffer[100] = "hello, enlave!";
+    size_t len = strlen(buffer);
+
+    sgx_status_t sign_status = sign_tx_blob(global_eid, buffer, len);
     printf("sign_status:%d, s_data:%d\n", sign_status, s_data);
 
     return 0;
